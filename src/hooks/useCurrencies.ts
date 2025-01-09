@@ -11,8 +11,6 @@ export function useCurrencies() {
   async function fetchCurrencies() {
     try {
       setError("");
-      //setLoading(true);
-      console.log("Запрос...");
       const response = await axios.get<IApiResponse>(
         "https://www.cbr-xml-daily.ru/daily_json.js"
       );

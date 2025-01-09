@@ -28,9 +28,11 @@ function App() {
     setSelectedCurrencyTo(selectedCurrencyFrom);
     setCurrencyDetailsTo(currencyDetailsFrom);
 
-    const tempInputFromValue = inputFromValue;
     setInputFromValue(inputToValue);
-    setInputToValue(tempInputFromValue);
+    setInputToValue(inputFromValue);
+    // const tempInputFromValue = inputFromValue;
+    // setInputFromValue(inputToValue);
+    // setInputToValue(tempInputFromValue);
   };
 
   if (loading) {
@@ -50,7 +52,6 @@ function App() {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">
-      {error && <h1 className="text-4xl font-bold text-red-400 py-8">Error</h1>}
       <h1 className="text-4xl font-bold text-gray-700 py-8">Конвертер валют</h1>
       <div className="space-y-8 w-full">
         <div className="flex justify-center w-full space-x-4">

@@ -19,8 +19,8 @@ export function Inputs({
   setInputToValue,
 }: InputsProps) {
   const {
-    handleInputFromChange,
-    handleInputToChange,
+    handleInputChange,
+    // handleInputToChange,
     handleFromInputFocus,
     handleToInputFocus,
   } = useInputs({
@@ -40,7 +40,7 @@ export function Inputs({
           className="w-full h-10 text-lg font-bold text-center border border-gray-300 rounded"
           value={inputFromValue}
           placeholder="Введите сумму"
-          onChange={handleInputFromChange}
+          onChange={(event) => handleInputChange(event, setInputFromValue)}
           onFocus={handleFromInputFocus}
         />
       </div>
@@ -51,7 +51,7 @@ export function Inputs({
           className="w-full h-10 text-lg text-center font-bold border border-gray-300 rounded"
           value={inputToValue}
           placeholder="Результат"
-          onChange={handleInputToChange}
+          onChange={(event) => handleInputChange(event, setInputToValue)}
           onFocus={handleToInputFocus}
         />
       </div>

@@ -46,21 +46,22 @@ export function useInputs({
     }
   }, [inputToValue, isToInputFocused, currencyDetailsFrom, currencyDetailsTo]);
 
-  const handleInputFromChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    setter: React.Dispatch<string>
   ) => {
     const value = event.target.value;
     if (/^(?!0\d)(\d+(\.\d{0,2})?)?$/.test(value)) {
-      setInputFromValue(value);
+      setter(value);
     }
   };
 
-  const handleInputToChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    if (/^(?!0\d)(\d+(\.\d{0,2})?)?$/.test(value)) {
-      setInputToValue(value);
-    }
-  };
+  // const handleInputToChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   if (/^(?!0\d)(\d+(\.\d{0,2})?)?$/.test(value)) {
+  //     setInputToValue(value);
+  //   }
+  // };
 
   const handleFromInputFocus = () => {
     setIsFromInputFocused(true);
@@ -73,8 +74,7 @@ export function useInputs({
   };
 
   return {
-    handleInputFromChange,
-    handleInputToChange,
+    handleInputChange,
     handleFromInputFocus,
     handleToInputFocus,
   };
