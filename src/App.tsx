@@ -29,23 +29,24 @@ function App() {
     setInputToValue(inputFromValue);
   };
 
+  const defaultStyles = "flex flex-col justify-center items-center h-screen";
   if (loading) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen">
+      <div className={defaultStyles}>
         <h1 className="text-4xl font-bold text-gray-700 py-8">Загрузка...</h1>
       </div>
     );
   }
   if (error) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen">
+      <div className={defaultStyles}>
         <h1 className="text-4xl font-bold text-red-400 py-8">Ошибка</h1>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className={defaultStyles}>
       <h1 className="text-4xl font-bold text-gray-700 py-8">Конвертер валют</h1>
       <div className="space-y-8 w-full">
         <div className="flex justify-center w-full space-x-4">
