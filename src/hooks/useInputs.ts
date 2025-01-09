@@ -56,13 +56,6 @@ export function useInputs({
     }
   };
 
-  // const handleInputToChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   if (/^(?!0\d)(\d+(\.\d{0,2})?)?$/.test(value)) {
-  //     setInputToValue(value);
-  //   }
-  // };
-
   const handleFromInputFocus = () => {
     setIsFromInputFocused(true);
     setIsToInputFocused(false);

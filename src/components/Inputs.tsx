@@ -18,19 +18,15 @@ export function Inputs({
   setInputFromValue,
   setInputToValue,
 }: InputsProps) {
-  const {
-    handleInputChange,
-    // handleInputToChange,
-    handleFromInputFocus,
-    handleToInputFocus,
-  } = useInputs({
-    currencyDetailsFrom,
-    currencyDetailsTo,
-    inputFromValue,
-    inputToValue,
-    setInputFromValue,
-    setInputToValue,
-  });
+  const { handleInputChange, handleFromInputFocus, handleToInputFocus } =
+    useInputs({
+      currencyDetailsFrom,
+      currencyDetailsTo,
+      inputFromValue,
+      inputToValue,
+      setInputFromValue,
+      setInputToValue,
+    });
 
   return (
     <div className="flex w-full justify-center space-x-4">

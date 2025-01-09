@@ -1,35 +1,35 @@
 import { useCurrencies } from "../hooks/useCurrencies";
 import { SelectOption, CurrencyDetails } from "../models";
 
-export function useSelectorTo(
-  setSelectedCurrencyTo: (currency: SelectOption | null) => void,
-  setCurrencyDetailsTo: (currencyDetails: CurrencyDetails | null) => void
+export function useSelector(
+  setSelectedCurrency: (currency: SelectOption | null) => void,
+  setCurrencyDetails: (currencyDetails: CurrencyDetails | null) => void
 ) {
   const { currencies } = useCurrencies();
-  const optionsTo = currencies.map((currency) => ({
+  const options = currencies.map((currency) => ({
     value: currency.CharCode,
     label: currency.Name,
   }));
 
-  const handleChangeTo = (selectedOption: SelectOption | null) => {
+  const handleChange = (selectedOption: SelectOption | null) => {
     if (selectedOption) {
-      setSelectedCurrencyTo(selectedOption);
+      setSelectedCurrency(selectedOption);
       const currency = currencies.find(
         (cur) => cur.CharCode === selectedOption.value
       );
       if (currency) {
-        setCurrencyDetailsTo({
+        setCurrencyDetails({
           Nominal: currency.Nominal,
           Value: currency.Value,
         });
       }
     } else {
-      setCurrencyDetailsTo(null);
+      setCurrencyDetails(null);
     }
   };
 
   return {
-    optionsTo,
-    handleChangeTo,
+    options,
+    handleChange,
   };
 }

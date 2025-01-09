@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Inputs } from "./components/Inputs";
-import { SelectFrom } from "./components/SelectFrom";
-import { SelectTo } from "./components/SelectTo";
+import { SelectCurrency } from "./components/SelectCurrency";
 import { SelectOption, CurrencyDetails } from "./models";
 import "./index.css";
 import { useCurrencies } from "./hooks/useCurrencies";
@@ -19,7 +18,6 @@ function App() {
 
   const [inputFromValue, setInputFromValue] = useState<string>("");
   const [inputToValue, setInputToValue] = useState<string>("");
-
   const { loading, error } = useCurrencies();
 
   const swapCurrencies = () => {
@@ -27,12 +25,8 @@ function App() {
     setCurrencyDetailsFrom(currencyDetailsTo);
     setSelectedCurrencyTo(selectedCurrencyFrom);
     setCurrencyDetailsTo(currencyDetailsFrom);
-
     setInputFromValue(inputToValue);
     setInputToValue(inputFromValue);
-    // const tempInputFromValue = inputFromValue;
-    // setInputFromValue(inputToValue);
-    // setInputToValue(tempInputFromValue);
   };
 
   if (loading) {
@@ -69,20 +63,20 @@ function App() {
             <span className="absolute left-[-170px] top-1/2 transform -translate-y-1/2 font-bold text-lg text-gray-700 mr-2">
               Вы переводите из
             </span>
-            <SelectFrom
-              selectedCurrencyFrom={selectedCurrencyFrom}
-              setSelectedCurrencyFrom={setSelectedCurrencyFrom}
-              setCurrencyDetailsFrom={setCurrencyDetailsFrom}
+            <SelectCurrency
+              selectedCurrency={selectedCurrencyFrom}
+              setSelectedCurrency={setSelectedCurrencyFrom}
+              setCurrencyDetails={setCurrencyDetailsFrom}
             />
           </div>
           <span className="aboslute top-1/2 font-bold text-lg text-gray-700 mr-2 mt-[5px]">
             в
           </span>
           <div className="w-full max-w-[600px]">
-            <SelectTo
-              selectedCurrencyTo={selectedCurrencyTo}
-              setSelectedCurrencyTo={setSelectedCurrencyTo}
-              setCurrencyDetailsTo={setCurrencyDetailsTo}
+            <SelectCurrency
+              selectedCurrency={selectedCurrencyTo}
+              setSelectedCurrency={setSelectedCurrencyTo}
+              setCurrencyDetails={setCurrencyDetailsTo}
             />
           </div>
         </div>
