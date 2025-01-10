@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Inputs } from "./components/Inputs";
 import { SelectCurrency } from "./components/SelectCurrency";
 import { SelectOption, CurrencyDetails } from "./models";
 import "./index.css";
 import { useCurrencies } from "./hooks/useCurrencies";
+import { Input } from "./components/Input";
+import { useInputsTest } from "./hooks/useInputsTest";
 
 function App() {
   const [selectedCurrencyFrom, setSelectedCurrencyFrom] =
@@ -19,6 +21,35 @@ function App() {
   const [inputFromValue, setInputFromValue] = useState<string>("");
   const [inputToValue, setInputToValue] = useState<string>("");
   const { loading, error } = useCurrencies();
+  ///Тестовая хуйня пишется здесь!!!!!!
+  const [inputFromValueTest, setInputFromValueTest] = useState<string>("");
+  const [inputToValueTest, setInputToValueTest] = useState<string>("");
+
+  useEffect(() => {
+    if (currencyDetailsFrom && currencyDetailsTo) {
+      const convertedValue =
+        (parseFloat(inputFromValueTest) *
+          (currencyDetailsFrom.Value / currencyDetailsFrom.Nominal)) /
+        (currencyDetailsTo.Value / currencyDetailsTo.Nominal);
+      setInputToValueTest(
+        isNaN(convertedValue) ? "" : convertedValue.toFixed(2)
+      );
+    }
+  }, [inputFromValueTest, currencyDetailsFrom, currencyDetailsTo]);
+
+  useEffect(() => {
+    if (currencyDetailsFrom && currencyDetailsTo) {
+      const convertedValue =
+        (parseFloat(inputToValueTest) *
+          (currencyDetailsTo.Value / currencyDetailsTo.Nominal)) /
+        (currencyDetailsFrom.Value / currencyDetailsFrom.Nominal);
+      setInputFromValueTest(
+        isNaN(convertedValue) ? "" : convertedValue.toFixed(2)
+      );
+    }
+  }, [inputToValueTest, currencyDetailsFrom, currencyDetailsTo]);
+
+  ///и заканчивается здесь!!!!!!!!!!
 
   const swapCurrencies = () => {
     setSelectedCurrencyFrom(selectedCurrencyTo);
@@ -92,6 +123,16 @@ function App() {
           >
             Поменять местами
           </a>
+          <Input
+            currencyDetails={currencyDetailsFrom}
+            inputValue={inputFromValueTest}
+            setInputValue={setInputFromValueTest}
+          />
+          <Input
+            currencyDetails={currencyDetailsTo}
+            inputValue={inputToValueTest}
+            setInputValue={setInputToValueTest}
+          />
         </div>
       </div>
     </div>
