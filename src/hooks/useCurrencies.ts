@@ -4,28 +4,19 @@ import axios, { AxiosError } from "axios";
 
 export function useCurrencies() {
   const [currencies, setCurrencies] = useState<ICurrency[]>([]);
-  //const [keys, setKeys] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   async function fetchCurrencies() {
     try {
       setError("");
-      const response = await axios.get<IApiResponse>(
-        "https://www.cbr-xml-daily.ru/daily_json.js"
-      );
 
-      const Ruble: ICurrency = {
-        ID: "R01R01",
-        NumCode: 999,
-        CharCode: "RUB",
-        Nominal: 1,
-        Name: "Рубли",
-        Value: 1,
-        Previous: 1,
-      };
-      setCurrencies([Ruble, ...Object.values(response.data.Valute)]);
-      //setKeys(Object.keys(response.data.Valute))
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (!apiUrl) {
+        throw new Error("URL API не определён в переменных окружения");
+      }
+      const response = await axios.get<IApiResponse>(apiUrl);
+      setCurrencies(Object.values(response.data.Valute));
       setLoading(false);
     } catch (e: unknown) {
       const error = e as AxiosError;

@@ -1,21 +1,26 @@
-import { CurrencyDetails } from "../models";
-
 interface InputProps {
-  currencyDetails: CurrencyDetails | null;
   inputValue: string;
   setInputValue: (value: string) => void;
+  onChangeFunction?: (value: string) => void;
 }
 
-export function Input({ inputValue, setInputValue }: InputProps) {
+export function Input({
+  inputValue,
+  setInputValue,
+  onChangeFunction,
+}: InputProps) {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (/^(?!0\d)(\d+(\.\d{0,4})?)?$/.test(value)) {
       setInputValue(value);
+      if (onChangeFunction) {
+        onChangeFunction(value);
+      }
     }
   };
 
   return (
-    <div className="flex w-full justify-center space-x-4">
+    <div className="flex w-full justify-center px-3">
       <div className="w-full max-w-[600px]">
         <input
           type="text"

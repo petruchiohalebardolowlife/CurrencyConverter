@@ -19,9 +19,6 @@ export interface IApiResponse {
 export interface SelectOption {
   value: string;
   label: string;
-}
-
-export interface CurrencyDetails {
-  Nominal: number;
-  Value: number;
+  nominal: number;
+  valueInCurrency: number;
 }

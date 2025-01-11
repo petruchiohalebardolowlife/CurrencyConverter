@@ -1,22 +1,17 @@
 import Select from "react-select";
-import { SelectOption, CurrencyDetails } from "../models";
+import { SelectOption } from "../models";
 import { useSelector } from "../hooks/useSelector";
 
 interface SelectProps {
   selectedCurrency: SelectOption | null;
   setSelectedCurrency: (currency: SelectOption | null) => void;
-  setCurrencyDetails: (currencyDetails: CurrencyDetails | null) => void;
 }
 
 export function SelectCurrency({
   selectedCurrency,
   setSelectedCurrency,
-  setCurrencyDetails,
 }: SelectProps) {
-  const { options, handleChange } = useSelector(
-    setSelectedCurrency,
-    setCurrencyDetails
-  );
+  const { options, handleChange } = useSelector(setSelectedCurrency);
 
   return (
     <div className="w-full">

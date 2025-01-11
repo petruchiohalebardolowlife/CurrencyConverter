@@ -1,140 +1,134 @@
 import { useState, useEffect } from "react";
-import { Inputs } from "./components/Inputs";
 import { SelectCurrency } from "./components/SelectCurrency";
-import { SelectOption, CurrencyDetails } from "./models";
+import { SelectOption } from "./models";
 import "./index.css";
 import { useCurrencies } from "./hooks/useCurrencies";
 import { Input } from "./components/Input";
-import { useInputsTest } from "./hooks/useInputsTest";
 
 function App() {
   const [selectedCurrencyFrom, setSelectedCurrencyFrom] =
     useState<SelectOption | null>(null);
-  const [currencyDetailsFrom, setCurrencyDetailsFrom] =
-    useState<CurrencyDetails | null>(null);
-
   const [selectedCurrencyTo, setSelectedCurrencyTo] =
     useState<SelectOption | null>(null);
-  const [currencyDetailsTo, setCurrencyDetailsTo] =
-    useState<CurrencyDetails | null>(null);
-
   const [inputFromValue, setInputFromValue] = useState<string>("");
   const [inputToValue, setInputToValue] = useState<string>("");
   const { loading, error } = useCurrencies();
-  ///Тестовая хуйня пишется здесь!!!!!!
-  const [inputFromValueTest, setInputFromValueTest] = useState<string>("");
-  const [inputToValueTest, setInputToValueTest] = useState<string>("");
 
-  useEffect(() => {
-    if (currencyDetailsFrom && currencyDetailsTo) {
+  const converter = (
+    value: string,
+    selectedCurrencyFrom: SelectOption | null,
+    selectedCurrencyTo: SelectOption | null,
+    setOtherInputValue: (value: string) => void
+  ) => {
+    if (selectedCurrencyFrom && selectedCurrencyTo) {
       const convertedValue =
-        (parseFloat(inputFromValueTest) *
-          (currencyDetailsFrom.Value / currencyDetailsFrom.Nominal)) /
-        (currencyDetailsTo.Value / currencyDetailsTo.Nominal);
-      setInputToValueTest(
+        (parseFloat(value) *
+          (selectedCurrencyFrom.valueInCurrency /
+            selectedCurrencyFrom.nominal)) /
+        (selectedCurrencyTo.valueInCurrency / selectedCurrencyTo.nominal);
+
+      setOtherInputValue(
         isNaN(convertedValue) ? "" : convertedValue.toFixed(2)
       );
     }
-  }, [inputFromValueTest, currencyDetailsFrom, currencyDetailsTo]);
-
-  useEffect(() => {
-    if (currencyDetailsFrom && currencyDetailsTo) {
-      const convertedValue =
-        (parseFloat(inputToValueTest) *
-          (currencyDetailsTo.Value / currencyDetailsTo.Nominal)) /
-        (currencyDetailsFrom.Value / currencyDetailsFrom.Nominal);
-      setInputFromValueTest(
-        isNaN(convertedValue) ? "" : convertedValue.toFixed(2)
-      );
-    }
-  }, [inputToValueTest, currencyDetailsFrom, currencyDetailsTo]);
-
-  ///и заканчивается здесь!!!!!!!!!!
+  };
 
   const swapCurrencies = () => {
     setSelectedCurrencyFrom(selectedCurrencyTo);
-    setCurrencyDetailsFrom(currencyDetailsTo);
     setSelectedCurrencyTo(selectedCurrencyFrom);
-    setCurrencyDetailsTo(currencyDetailsFrom);
     setInputFromValue(inputToValue);
     setInputToValue(inputFromValue);
   };
 
+  useEffect(() => {
+    if (selectedCurrencyFrom && selectedCurrencyTo) {
+      converter(
+        inputFromValue,
+        selectedCurrencyFrom,
+        selectedCurrencyTo,
+        setInputToValue
+      );
+    }
+  }, [selectedCurrencyFrom, selectedCurrencyTo]);
+
   const defaultStyles = "flex flex-col justify-center items-center h-screen";
+  const contStyles = "flex justify-center w-full space-x-4 py-5";
+  const headerStyles = "text-4xl font-bold text-gray-700 py-8";
   if (loading) {
     return (
       <div className={defaultStyles}>
-        <h1 className="text-4xl font-bold text-gray-700 py-8">Загрузка...</h1>
+        <h1 className={headerStyles}>Загрузка...</h1>
       </div>
     );
   }
   if (error) {
     return (
       <div className={defaultStyles}>
-        <h1 className="text-4xl font-bold text-red-400 py-8">Ошибка</h1>
+        <h1 className={headerStyles}>Ошибка</h1>
       </div>
     );
   }
 
   return (
     <div className={defaultStyles}>
-      <h1 className="text-4xl font-bold text-gray-700 py-8">Конвертер валют</h1>
-      <div className="space-y-8 w-full">
-        <div className="flex justify-center w-full space-x-4">
-          <Inputs
-            currencyDetailsFrom={currencyDetailsFrom}
-            currencyDetailsTo={currencyDetailsTo}
-            inputFromValue={inputFromValue}
-            inputToValue={inputToValue}
-            setInputFromValue={setInputFromValue}
-            setInputToValue={setInputToValue}
-          />
-        </div>
-        <div className="flex justify-center w-full space-x-4">
-          <div className="relative w-full max-w-[600px]">
-            <span className="absolute left-[-170px] top-1/2 transform -translate-y-1/2 font-bold text-lg text-gray-700 mr-2">
-              Вы переводите из
-            </span>
-            <SelectCurrency
-              selectedCurrency={selectedCurrencyFrom}
-              setSelectedCurrency={setSelectedCurrencyFrom}
-              setCurrencyDetails={setCurrencyDetailsFrom}
-            />
-          </div>
-          <span className="aboslute top-1/2 font-bold text-lg text-gray-700 mr-2 mt-[5px]">
-            в
+      <h1 className={headerStyles}>Конвертер валют</h1>
+
+      <div className={contStyles}>
+        <div className="relative w-full max-w-[600px]">
+          <span className="absolute left-[-180px] top-1/2 transform -translate-y-1/2 font-bold text-lg text-gray-700 mr-2">
+            Вы переводите из
           </span>
-          <div className="w-full max-w-[600px]">
-            <SelectCurrency
-              selectedCurrency={selectedCurrencyTo}
-              setSelectedCurrency={setSelectedCurrencyTo}
-              setCurrencyDetails={setCurrencyDetailsTo}
-            />
-          </div>
-        </div>
-        <div className="flex justify-center w-full space-x-4">
-          <a
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              swapCurrencies();
-            }}
-            className="text-gray-700 font-bold hover:underline cursor-pointer border-2 border-grey p-2 rounded-xl"
-          >
-            Поменять местами
-          </a>
-          <Input
-            currencyDetails={currencyDetailsFrom}
-            inputValue={inputFromValueTest}
-            setInputValue={setInputFromValueTest}
+          <SelectCurrency
+            selectedCurrency={selectedCurrencyFrom}
+            setSelectedCurrency={setSelectedCurrencyFrom}
           />
-          <Input
-            currencyDetails={currencyDetailsTo}
-            inputValue={inputToValueTest}
-            setInputValue={setInputToValueTest}
+        </div>
+        <span className=" top-1/2 font-bold text-lg text-gray-700 mr-2 mt-[5px]">
+          в
+        </span>
+        <div className="w-full max-w-[600px]">
+          <SelectCurrency
+            selectedCurrency={selectedCurrencyTo}
+            setSelectedCurrency={setSelectedCurrencyTo}
           />
         </div>
       </div>
+      <div className={contStyles}>
+        <div className="relative w-full max-w-[600px]">
+          <Input
+            inputValue={inputFromValue}
+            setInputValue={setInputFromValue}
+            onChangeFunction={(value) =>
+              converter(
+                value,
+                selectedCurrencyFrom,
+                selectedCurrencyTo,
+                setInputToValue
+              )
+            }
+          />
+        </div>
+        <div className="w-full max-w-[600px]">
+          <Input
+            inputValue={inputToValue}
+            setInputValue={setInputToValue}
+            onChangeFunction={(value) =>
+              converter(
+                value,
+                selectedCurrencyTo,
+                selectedCurrencyFrom,
+                setInputFromValue
+              )
+            }
+          />
+        </div>
+      </div>
+      <button
+        className="hover:bg-sky-200 hover: underline"
+        onClick={swapCurrencies}
+      >
+        поменять местами
+      </button>
     </div>
   );
 }
