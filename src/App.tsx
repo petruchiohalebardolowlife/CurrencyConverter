@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { SelectCurrency } from "./components/SelectCurrency";
 import { SelectOption } from "./models";
+import Select from "react-select";
 import "./index.css";
 import { useCurrencies } from "./hooks/useCurrencies";
 import { Input } from "./components/Input";
+import Layout from "./components/Layout";
 
 function App() {
   const [selectedCurrencyFrom, setSelectedCurrencyFrom] =
@@ -12,14 +13,23 @@ function App() {
     useState<SelectOption | null>(null);
   const [inputFromValue, setInputFromValue] = useState<string>("");
   const [inputToValue, setInputToValue] = useState<string>("");
-  const { loading, error } = useCurrencies();
+  const { currencies, error, loading } = useCurrencies();
+
+  const options = currencies.map((currency) => ({
+    value: currency.CharCode,
+    label: currency.Name,
+    nominal: currency.Nominal,
+    valueInCurrency: currency.Value,
+  }));
 
   const converter = (
     value: string,
+    setInputValue: (value: string) => void,
     selectedCurrencyFrom: SelectOption | null,
     selectedCurrencyTo: SelectOption | null,
     setOtherInputValue: (value: string) => void
   ) => {
+    setInputValue(value);
     if (selectedCurrencyFrom && selectedCurrencyTo) {
       const convertedValue =
         (parseFloat(value) *
@@ -44,6 +54,7 @@ function App() {
     if (selectedCurrencyFrom && selectedCurrencyTo) {
       converter(
         inputFromValue,
+        setInputFromValue,
         selectedCurrencyFrom,
         selectedCurrencyTo,
         setInputToValue
@@ -51,49 +62,39 @@ function App() {
     }
   }, [selectedCurrencyFrom, selectedCurrencyTo]);
 
-  const defaultStyles = "flex flex-col justify-center items-center h-screen";
-  const contStyles = "flex justify-center w-full space-x-4 py-5";
-  const headerStyles = "text-4xl font-bold text-gray-700 py-8";
-  if (loading) {
-    return (
-      <div className={defaultStyles}>
-        <h1 className={headerStyles}>Загрузка...</h1>
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className={defaultStyles}>
-        <h1 className={headerStyles}>Ошибка</h1>
-      </div>
-    );
-  }
-
   return (
-    <div className={defaultStyles}>
-      <h1 className={headerStyles}>Конвертер валют</h1>
-
-      <div className={contStyles}>
+    <Layout loading={loading} error={error}>
+      <div className="flex justify-center w-full space-x-4 py-5">
         <div className="relative w-full max-w-[600px]">
           <span className="absolute left-[-180px] top-1/2 transform -translate-y-1/2 font-bold text-lg text-gray-700 mr-2">
             Вы переводите из
           </span>
-          <SelectCurrency
-            selectedCurrency={selectedCurrencyFrom}
-            setSelectedCurrency={setSelectedCurrencyFrom}
+          <Select
+            options={options}
+            value={selectedCurrencyFrom}
+            onChange={(selectedCurrencyFrom) =>
+              setSelectedCurrencyFrom(selectedCurrencyFrom)
+            }
+            className="text-lg text-center font-bold"
+            placeholder="Выберите валюту"
           />
         </div>
-        <span className=" top-1/2 font-bold text-lg text-gray-700 mr-2 mt-[5px]">
+        <span className="top-1/2 font-bold text-lg text-gray-700 mr-2 mt-[5px]">
           в
         </span>
         <div className="w-full max-w-[600px]">
-          <SelectCurrency
-            selectedCurrency={selectedCurrencyTo}
-            setSelectedCurrency={setSelectedCurrencyTo}
+          <Select
+            options={options}
+            value={selectedCurrencyTo}
+            onChange={(selectedCurrencyTo) =>
+              setSelectedCurrencyTo(selectedCurrencyTo)
+            }
+            className="text-lg text-center font-bold"
+            placeholder="Выберите валюту"
           />
         </div>
       </div>
-      <div className={contStyles}>
+      <div className="flex justify-center w-full space-x-4 py-5">
         <div className="relative w-full max-w-[600px]">
           <Input
             inputValue={inputFromValue}
@@ -101,6 +102,7 @@ function App() {
             onChangeFunction={(value) =>
               converter(
                 value,
+                setInputFromValue,
                 selectedCurrencyFrom,
                 selectedCurrencyTo,
                 setInputToValue
@@ -115,6 +117,7 @@ function App() {
             onChangeFunction={(value) =>
               converter(
                 value,
+                setInputToValue,
                 selectedCurrencyTo,
                 selectedCurrencyFrom,
                 setInputFromValue
@@ -124,12 +127,12 @@ function App() {
         </div>
       </div>
       <button
-        className="hover:bg-sky-200 hover: underline"
+        className="hover:bg-sky-200 hover:underline"
         onClick={swapCurrencies}
       >
         поменять местами
       </button>
-    </div>
+    </Layout>
   );
 }
 
